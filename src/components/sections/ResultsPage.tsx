@@ -67,7 +67,7 @@ export default function ResultsPage({ result, setPage }: ResultsPageProps) {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);
 
-  const maxScore = 6;
+  const maxScore = 30;
 
   return (
     <main className="min-h-screen pt-16 px-6 pb-24">

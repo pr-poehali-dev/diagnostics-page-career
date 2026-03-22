@@ -218,10 +218,18 @@ const questions = RAW_QUESTIONS.map((text, i) => ({ id: i + 1, text }));
 
 const TOTAL = questions.length;
 
-function computeResult(answers: Record<number, boolean>): TestResult {
+const SCALE = [
+  { value: 1, label: "Абсолютно нет" },
+  { value: 2, label: "Нет" },
+  { value: 3, label: "Нейтрально" },
+  { value: 4, label: "Да" },
+  { value: 5, label: "Абсолютно да" },
+];
+
+function computeResult(answers: Record<number, number>): TestResult {
   const scores: Record<string, number> = {};
   for (const prof of PROFESSIONS) {
-    scores[prof.key] = prof.questions.filter((q) => answers[q] === true).length;
+    scores[prof.key] = prof.questions.reduce((sum, q) => sum + (answers[q] ?? 0), 0);
   }
   const top = PROFESSIONS.slice().sort((a, b) => scores[b.key] - scores[a.key])[0];
   return {
@@ -232,14 +240,14 @@ function computeResult(answers: Record<number, boolean>): TestResult {
 }
 
 export default function TestPage({ onComplete }: TestPageProps) {
-  const [answers, setAnswers] = useState<Record<number, boolean>>({});
+  const [answers, setAnswers] = useState<Record<number, number>>({});
   const [current, setCurrent] = useState(0);
 
   const answered = Object.keys(answers).length;
   const progress = (answered / TOTAL) * 100;
   const q = questions[current];
 
-  const selectAnswer = (val: boolean) => {
+  const selectAnswer = (val: number) => {
     const newAnswers = { ...answers, [q.id]: val };
     setAnswers(newAnswers);
 
@@ -292,33 +300,37 @@ export default function TestPage({ onComplete }: TestPageProps) {
             {q.text}
           </h2>
 
-          <div className="flex gap-4">
-            {/* Да */}
-            <button
-              onClick={() => selectAnswer(true)}
-              className="flex-1 py-5 rounded-2xl text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-95"
-              style={{
-                background: answers[q.id] === true ? "var(--color-accent)" : "var(--color-card)",
-                color: answers[q.id] === true ? "#fff" : "var(--color-text)",
-                border: `1.5px solid ${answers[q.id] === true ? "var(--color-accent)" : "var(--color-line)"}`,
-                fontFamily: "var(--font-display)",
-              }}
-            >
-              Да
-            </button>
-            {/* Нет */}
-            <button
-              onClick={() => selectAnswer(false)}
-              className="flex-1 py-5 rounded-2xl text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-95"
-              style={{
-                background: answers[q.id] === false ? "var(--color-text)" : "var(--color-card)",
-                color: answers[q.id] === false ? "var(--color-bg)" : "var(--color-text)",
-                border: `1.5px solid ${answers[q.id] === false ? "var(--color-text)" : "var(--color-line)"}`,
-                fontFamily: "var(--font-display)",
-              }}
-            >
-              Нет
-            </button>
+          <div className="flex flex-col gap-3">
+            {SCALE.map((opt) => {
+              const selected = answers[q.id] === opt.value;
+              const isPositive = opt.value >= 4;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => selectAnswer(opt.value)}
+                  className="flex items-center gap-4 px-5 py-4 rounded-2xl text-left transition-all duration-200 hover:scale-[1.01] active:scale-95"
+                  style={{
+                    background: selected
+                      ? isPositive ? "var(--color-accent)" : "var(--color-text)"
+                      : "var(--color-card)",
+                    color: selected ? "#fff" : "var(--color-text)",
+                    border: `1.5px solid ${selected ? (isPositive ? "var(--color-accent)" : "var(--color-text)") : "var(--color-line)"}`,
+                    fontFamily: "var(--font-body)",
+                  }}
+                >
+                  <span
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
+                    style={{
+                      background: selected ? "rgba(255,255,255,0.2)" : "var(--color-line)",
+                      color: selected ? "#fff" : "var(--color-muted)",
+                    }}
+                  >
+                    {opt.value}
+                  </span>
+                  <span className="text-sm">{opt.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center justify-between mt-8">
