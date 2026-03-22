@@ -1,14 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import HomePage from "@/components/sections/HomePage";
+import TestPage from "@/components/sections/TestPage";
+import ResultsPage from "@/components/sections/ResultsPage";
+import ProfessionsPage from "@/components/sections/ProfessionsPage";
+import Nav from "@/components/sections/Nav";
 
-const Index = () => {
+export type Page = "home" | "test" | "results" | "professions";
+
+export interface TestResult {
+  type: string;
+  label: string;
+  scores: Record<string, number>;
+}
+
+export default function Index() {
+  const [page, setPage] = useState<Page>("home");
+  const [result, setResult] = useState<TestResult | null>(null);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 color-black text-black">Добро пожаловать!</h1>
-        <p className="text-xl text-gray-600">тут будет отображаться ваш проект</p>
-      </div>
+    <div className="min-h-screen" style={{ background: "var(--color-bg)", color: "var(--color-text)" }}>
+      <Nav page={page} setPage={setPage} />
+      {page === "home" && <HomePage setPage={setPage} />}
+      {page === "test" && (
+        <TestPage
+          onComplete={(r) => {
+            setResult(r);
+            setPage("results");
+          }}
+        />
+      )}
+      {page === "results" && (
+        <ResultsPage result={result} setPage={setPage} />
+      )}
+      {page === "professions" && <ProfessionsPage setPage={setPage} />}
     </div>
   );
-};
-
-export default Index;
+}
