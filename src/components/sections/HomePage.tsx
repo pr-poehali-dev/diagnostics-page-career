@@ -131,7 +131,7 @@ export default function HomePage({ setPage }: HomePageProps) {
                 fontFamily: "var(--font-body)",
               }}
             >
-              Пройти тест бесплатно
+              Пройти тест
             </button>
           </div>
         </div>
