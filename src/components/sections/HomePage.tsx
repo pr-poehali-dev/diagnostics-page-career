@@ -9,7 +9,7 @@ const features = [
   {
     icon: "Brain",
     title: "Научный подход",
-    desc: "Тест основан на модели Холланда и современных исследованиях профориентации",
+    desc: "Тест основан на модели Голомштока и современных исследованиях профориентации",
   },
   {
     icon: "BarChart2",
@@ -73,9 +73,7 @@ export default function HomePage({ setPage }: HomePageProps) {
             </button>
           </div>
 
-          <p className="mt-6 text-sm" style={{ color: "var(--color-subtle)" }}>
-            Бесплатно · Без регистрации · 36 вопросов
-          </p>
+
         </div>
       </section>
 
