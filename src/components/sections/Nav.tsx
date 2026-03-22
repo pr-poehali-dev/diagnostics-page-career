@@ -9,7 +9,7 @@ const links: { label: string; key: Page }[] = [
   { label: "Главная", key: "home" },
   { label: "Тест", key: "test" },
   { label: "Результаты", key: "results" },
-  { label: "Профессии", key: "professions" },
+  { label: "Среды", key: "professions" },
 ];
 
 export default function Nav({ page, setPage }: NavProps) {

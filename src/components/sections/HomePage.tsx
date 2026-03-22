@@ -19,7 +19,7 @@ const features = [
   {
     icon: "Compass",
     title: "Конкретные рекомендации",
-    desc: "Список профессий, навыков и следующих шагов под ваш профиль",
+    desc: "Профессиональная среда, предметы, внеурочная деятельность и следующие шаги под ваш профиль",
   },
 ];
 
@@ -42,7 +42,7 @@ export default function HomePage({ setPage }: HomePageProps) {
           </h1>
 
           <p className="text-lg md:text-xl leading-relaxed mb-12" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-            15 минут — и вы узнаете, какие профессии раскроют ваш потенциал.
+            15 минут — и вы узнаете, какая профессиональная среда раскроет ваш потенциал.
             Подробная интерпретация и персональные рекомендации.
           </p>
 
@@ -69,7 +69,7 @@ export default function HomePage({ setPage }: HomePageProps) {
                 fontFamily: "var(--font-body)",
               }}
             >
-              Смотреть профессии
+              Смотреть среды
             </button>
           </div>
 

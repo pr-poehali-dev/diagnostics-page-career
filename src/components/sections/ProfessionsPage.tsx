@@ -148,10 +148,10 @@ export default function ProfessionsPage({ setPage }: ProfessionsPageProps) {
             Каталог
           </span>
           <h1 className="font-display text-4xl md:text-5xl font-semibold mb-4" style={{ color: "var(--color-text)" }}>
-            Профессии
+            Профессиональные среды
           </h1>
           <p className="text-base" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-            Изучите профессии по типу личности. Пройдите тест, чтобы найти своё.
+            Изучите профессиональные среды по типу личности. Пройдите тест, чтобы найти свою.
           </p>
         </div>
 
