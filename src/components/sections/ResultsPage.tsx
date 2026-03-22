@@ -1,97 +1,40 @@
 import { TestResult, Page } from "@/pages/Index";
-import Icon from "@/components/ui/icon";
 
 interface ResultsPageProps {
   result: TestResult | null;
   setPage: (p: Page) => void;
 }
 
-const interpretations: Record<string, {
-  emoji: string;
-  description: string;
-  strengths: string[];
-  challenges: string[];
-  professions: string[];
-  recommendations: string[];
-}> = {
-  R: {
-    emoji: "🔧",
-    description: "Вы — человек дела. Предпочитаете конкретные, осязаемые результаты абстрактным идеям. Вам комфортно работать с техникой, инструментами и физическими объектами. Вы надёжны, практичны и ценете стабильность.",
-    strengths: ["Техническое мышление", "Практическая сметка", "Надёжность", "Внимание к качеству"],
-    challenges: ["Рутинное общение с людьми", "Абстрактное планирование", "Бумажная работа"],
-    professions: ["Инженер", "Архитектор", "Строитель", "Механик", "Пилот", "Геолог", "Агроном"],
-    recommendations: [
-      "Рассмотрите технические специальности: инженер-конструктор, механик, строитель",
-      "Ищите работу, где виден конкретный результат ваших усилий",
-      "Развивайте технические навыки через практику и курсы",
-      "Рабочая среда должна быть активной, а не офисной",
-    ],
-  },
-  I: {
-    emoji: "🔬",
-    description: "Вы — аналитик и исследователь. Вас захватывают сложные вопросы, данные и эксперименты. Вы любите глубоко разбираться в теме и находить нестандартные решения через логику и знания.",
-    strengths: ["Аналитическое мышление", "Любопытство", "Самостоятельность", "Системный подход"],
-    challenges: ["Социальная коммуникация", "Продажи и убеждение", "Рутинные задачи"],
-    professions: ["Учёный", "Программист", "Аналитик данных", "Врач", "Экономист", "Психолог-исследователь"],
-    recommendations: [
-      "Ваш путь — наука, IT, аналитика или медицина",
-      "Ищите среду, где ценится глубина знаний, а не скорость",
-      "Развивайте навыки презентации своих идей — это усилит влияние",
-      "Найдите ментора в интересной вам сфере",
-    ],
-  },
-  A: {
-    emoji: "🎨",
-    description: "Вы — творец. Вам важно самовыражение, оригинальность и красота. Шаблоны и правила — не для вас. Вы видите мир через призму эмоций и образов, и лучше всего работаете, когда есть свобода творчества.",
-    strengths: ["Креативность", "Эмоциональный интеллект", "Оригинальность", "Визуальное мышление"],
-    challenges: ["Структура и дедлайны", "Рутинные задачи", "Коммерческое мышление"],
-    professions: ["Дизайнер", "Художник", "Писатель", "Режиссёр", "Музыкант", "Архитектор", "UX-исследователь"],
-    recommendations: [
-      "Ищите работу, где ценится уникальность, а не соответствие стандарту",
-      "Портфолио важнее диплома — создавайте и показывайте свои работы",
-      "Развивайте базу в дизайне, копирайтинге или медиа",
-      "Фриланс или творческие студии — ваша среда",
-    ],
-  },
-  S: {
-    emoji: "🤝",
-    description: "Вы — человек для людей. Вы чувствуете себя в своей стихии, когда помогаете, обучаете или поддерживаете других. Вас мотивирует развитие окружающих и возможность делать жизнь лучше.",
-    strengths: ["Эмпатия", "Коммуникабельность", "Умение слушать", "Педагогический дар"],
-    challenges: ["Конкуренция и жёсткость", "Работа в одиночку", "Технические задачи"],
-    professions: ["Учитель", "Психолог", "HR-менеджер", "Социальный работник", "Тренер", "Врач", "Консультант"],
-    recommendations: [
-      "Ваш путь — образование, здравоохранение, психология или HR",
-      "Ищите команды с тёплой культурой и общей миссией",
-      "Развивайте навыки коучинга или фасилитации",
-      "Волонтёрство поможет понять, в какой сфере помощи вы наиболее эффективны",
-    ],
-  },
-  E: {
-    emoji: "🚀",
-    description: "Вы — лидер и предприниматель. Вас привлекает влияние, результат и возможность вести за собой. Вы умеете убеждать, видите возможности и не боитесь рисковать. Статус и достижения важны для вас.",
-    strengths: ["Лидерство", "Убедительность", "Стратегическое мышление", "Инициативность"],
-    challenges: ["Детальная аналитика", "Монотонная работа", "Зависимость от других решений"],
-    professions: ["Предприниматель", "Менеджер", "Юрист", "Продюсер", "Маркетолог", "Политик", "Брокер"],
-    recommendations: [
-      "Ваш путь — управление, предпринимательство, продажи или юриспруденция",
-      "Берите на себя лидерские роли даже в небольших проектах",
-      "Развивайте навыки переговоров и публичных выступлений",
-      "Найдите наставника-предпринимателя или присоединитесь к бизнес-сообществу",
-    ],
-  },
-  C: {
-    emoji: "📊",
-    description: "Вы — систематизатор. Вам нравится порядок, точность и предсказуемость. Вы отличный исполнитель с высоким вниманием к деталям. Структурированная среда с чёткими правилами — ваша стихия.",
-    strengths: ["Точность", "Надёжность", "Организованность", "Аналитика данных"],
-    challenges: ["Творческая неопределённость", "Лидерство", "Гибкость в хаосе"],
-    professions: ["Бухгалтер", "Финансист", "Аудитор", "Делопроизводитель", "Актуарий", "Системный администратор"],
-    recommendations: [
-      "Ваш путь — финансы, бухгалтерия, право, IT-администрирование",
-      "Ищите компании с выстроенными процессами и стабильностью",
-      "Развивайте навыки в Excel, 1С, SQL — это ваши инструменты силы",
-      "Сертификации и дипломы — важный сигнал вашего профессионализма",
-    ],
-  },
+const PROF_INFO: Record<string, { emoji: string; description: string }> = {
+  biology: { emoji: "🌿", description: "Вам близок живой мир — растения, животные, природные процессы. Это путь учёного-биолога, эколога, агронома или ветеринара." },
+  geography: { emoji: "🌍", description: "Вас влечёт изучение земного шара, стран и природных явлений. Географ, картограф, специалист по туризму или геоинформатике." },
+  geology: { emoji: "🪨", description: "Вам интересны недра Земли, экспедиции и минералы. Геолог, геофизик, горный инженер или специалист по добыче ресурсов." },
+  medicine: { emoji: "🩺", description: "Вам близка забота о здоровье людей. Врач, фармацевт, медсестра, стоматолог или специалист в области общественного здравоохранения." },
+  light_industry: { emoji: "🧵", description: "Вам интересно создание одежды, текстиля и товаров повседневного спроса. Технолог лёгкой промышленности, модельер, конструктор одежды." },
+  physics: { emoji: "⚛️", description: "Вас захватывают законы природы и физические явления. Физик, инженер-исследователь, специалист в области оптики, ядерной энергетики." },
+  chemistry: { emoji: "🧪", description: "Вам нравится мир химических реакций и веществ. Химик, фармацевт, технолог химического производства, аналитик." },
+  engineering: { emoji: "⚙️", description: "Техника и механизмы — ваша стихия. Инженер-конструктор, технолог производства, механик, машиностроитель." },
+  electronics: { emoji: "🔌", description: "Вы хорошо разбираетесь в схемах и электронике. Электронщик, радиотехник, инженер по автоматизации, специалист по IoT." },
+  metalwork: { emoji: "🔩", description: "Вам интересна работа с металлами и машинами. Слесарь, токарь, сварщик, инженер-металлург, конструктор деталей." },
+  design: { emoji: "🪵", description: "Вы умеете создавать красивые вещи из материалов. Дизайнер мебели, резчик по дереву, художник-прикладник, декоратор интерьеров." },
+  construction: { emoji: "🏗️", description: "Вам по душе создание зданий и сооружений. Строитель, архитектор, прораб, инженер-проектировщик, сметчик." },
+  transport: { emoji: "🚗", description: "Вас интересует движение и транспортные системы. Водитель, механик, диспетчер, инженер транспортной инфраструктуры." },
+  it: { emoji: "💻", description: "Цифровой мир и программирование — ваша среда. Программист, системный аналитик, DevOps, специалист по кибербезопасности." },
+  military: { emoji: "🎖️", description: "Вас привлекают дисциплина, стратегия и защита. Офицер вооружённых сил, военный инженер, специалист по безопасности." },
+  history: { emoji: "📜", description: "Вы любите прошлое и исторические процессы. Историк, архивист, преподаватель истории, музейный работник, краевед." },
+  literature: { emoji: "📖", description: "Вас захватывает мир слова и образов. Писатель, редактор, литературный критик, сценарист, библиотекарь." },
+  journalism: { emoji: "📰", description: "Вам важно говорить и рассказывать о событиях. Журналист, репортёр, пресс-секретарь, медиааналитик, блогер." },
+  social: { emoji: "🤝", description: "Вы активны в общественной жизни и умеете организовывать людей. Политик, общественный деятель, PR-менеджер, организатор мероприятий." },
+  pedagogy: { emoji: "👩‍🏫", description: "Вы умеете передавать знания и работать с детьми. Учитель, воспитатель, педагог-психолог, тренер, методист." },
+  law: { emoji: "⚖️", description: "Вас интересует справедливость и правовые нормы. Юрист, адвокат, прокурор, нотариус, правовой консультант." },
+  service: { emoji: "🛎️", description: "Вам нравится помогать людям в повседневных нуждах. Менеджер по сервису, продавец, администратор, специалист по туризму." },
+  math: { emoji: "📐", description: "Вас привлекают числа, логика и точные науки. Математик, статистик, актуарий, аналитик данных, преподаватель математики." },
+  economics: { emoji: "📈", description: "Вы хорошо понимаете экономические процессы. Экономист, финансист, бухгалтер, инвестиционный аналитик, аудитор." },
+  food: { emoji: "🍽️", description: "Кулинария и пищевая промышленность — ваша страсть. Повар, шеф-повар, технолог пищевого производства, кондитер." },
+  fine_arts: { emoji: "🎨", description: "Вы видите мир через цвет и форму. Художник, иллюстратор, дизайнер, скульптор, арт-директор." },
+  performing_arts: { emoji: "🎭", description: "Вас влечёт сцена и перевоплощение. Актёр, режиссёр, сценарист, хореограф, театральный менеджер." },
+  music: { emoji: "🎵", description: "Музыка — часть вашей жизни. Музыкант, композитор, звукорежиссёр, педагог по музыке, дирижёр." },
+  sports: { emoji: "🏆", description: "Спорт и физическая активность — ваша среда. Спортсмен, тренер, преподаватель физкультуры, спортивный менеджер." },
 };
 
 export default function ResultsPage({ result, setPage }: ResultsPageProps) {
@@ -118,18 +61,13 @@ export default function ResultsPage({ result, setPage }: ResultsPageProps) {
     );
   }
 
-  const info = interpretations[result.type];
-  const sortedScores = Object.entries(result.scores).sort((a, b) => b[1] - a[1]);
-  const maxScore = 30;
+  const info = PROF_INFO[result.type] ?? { emoji: "🎯", description: "Ваш уникальный профиль сформирован." };
 
-  const typeNames: Record<string, string> = {
-    R: "Реалистичный",
-    I: "Исследовательский",
-    A: "Артистический",
-    S: "Социальный",
-    E: "Предпринимательский",
-    C: "Конвенциональный",
-  };
+  const sortedScores = Object.entries(result.scores)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+
+  const maxScore = 6;
 
   return (
     <main className="min-h-screen pt-16 px-6 pb-24">
@@ -141,16 +79,16 @@ export default function ResultsPage({ result, setPage }: ResultsPageProps) {
             className="inline-block text-xs uppercase tracking-widest mb-6 px-4 py-2 rounded-full"
             style={{ background: "var(--color-tag-bg)", color: "var(--color-accent)" }}
           >
-            Ваш профиль
+            Ваш результат
           </span>
           <div className="flex items-center gap-4 mb-6">
             <span className="text-5xl">{info.emoji}</span>
             <div>
               <h1 className="font-display text-4xl font-semibold" style={{ color: "var(--color-text)" }}>
-                {result.label} тип
+                {result.label}
               </h1>
               <p className="text-sm mt-1" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-                Холланд тип · {result.type}
+                Наиболее подходящая сфера по результатам диагностики
               </p>
             </div>
           </div>
@@ -159,164 +97,63 @@ export default function ResultsPage({ result, setPage }: ResultsPageProps) {
           </p>
         </div>
 
-        {/* Scores */}
+        {/* Top-10 scores */}
         <div
           className="rounded-3xl p-8 mb-8"
           style={{ background: "var(--color-card)", border: "1px solid var(--color-line)" }}
         >
           <h2 className="font-display text-lg font-semibold mb-6" style={{ color: "var(--color-text)" }}>
-            Распределение по типам
+            Топ-10 подходящих сфер
           </h2>
           <div className="flex flex-col gap-4">
-            {sortedScores.map(([type, score]) => (
-              <div key={type}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm" style={{ color: "var(--color-text)", fontFamily: "var(--font-body)" }}>
-                    {typeNames[type]}
-                  </span>
-                  <span className="text-xs font-medium" style={{ color: "var(--color-muted)" }}>
-                    {score}/{maxScore}
-                  </span>
+            {sortedScores.map(([key, score], idx) => {
+              const pInfo = PROF_INFO[key];
+              const pct = (score / maxScore) * 100;
+              return (
+                <div key={key}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-sm flex items-center gap-2" style={{ color: "var(--color-text)", fontFamily: "var(--font-body)" }}>
+                      <span>{pInfo?.emoji}</span>
+                      <span>{result.scores && Object.keys(result.scores).length > 0
+                        ? (idx === 0
+                          ? <strong>{key === result.type ? result.label : key}</strong>
+                          : (key === result.type ? result.label : key))
+                        : key}
+                      </span>
+                    </span>
+                    <span className="text-xs font-medium" style={{ color: "var(--color-muted)" }}>
+                      {score}/{maxScore}
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full overflow-hidden" style={{ background: "var(--color-line)" }}>
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${pct}%`,
+                        background: idx === 0 ? "var(--color-accent)" : "var(--color-muted)",
+                        opacity: idx === 0 ? 1 : 0.45,
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="h-2 rounded-full overflow-hidden" style={{ background: "var(--color-line)" }}>
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{
-                      width: `${(score / maxScore) * 100}%`,
-                      background: type === result.type ? "var(--color-accent)" : "var(--color-text)",
-                      opacity: type === result.type ? 1 : 0.3,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
-
-        {/* Strengths & Challenges */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div
-            className="rounded-3xl p-8"
-            style={{ background: "var(--color-card)", border: "1px solid var(--color-line)" }}
-          >
-            <h2 className="font-display text-lg font-semibold mb-5" style={{ color: "var(--color-text)" }}>
-              Сильные стороны
-            </h2>
-            <ul className="flex flex-col gap-3">
-              {info.strengths.map((s) => (
-                <li key={s} className="flex items-center gap-3">
-                  <div
-                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                    style={{ background: "var(--color-accent)" }}
-                  />
-                  <span className="text-sm" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-                    {s}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div
-            className="rounded-3xl p-8"
-            style={{ background: "var(--color-card)", border: "1px solid var(--color-line)" }}
-          >
-            <h2 className="font-display text-lg font-semibold mb-5" style={{ color: "var(--color-text)" }}>
-              Зоны роста
-            </h2>
-            <ul className="flex flex-col gap-3">
-              {info.challenges.map((c) => (
-                <li key={c} className="flex items-center gap-3">
-                  <div
-                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                    style={{ background: "var(--color-line)" }}
-                  />
-                  <span className="text-sm" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-                    {c}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Professions */}
-        <div
-          className="rounded-3xl p-8 mb-8"
-          style={{ background: "var(--color-card)", border: "1px solid var(--color-line)" }}
-        >
-          <h2 className="font-display text-lg font-semibold mb-5" style={{ color: "var(--color-text)" }}>
-            Подходящие профессии
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {info.professions.map((p) => (
-              <span
-                key={p}
-                className="px-4 py-2 rounded-full text-sm"
-                style={{
-                  background: "var(--color-tag-bg)",
-                  color: "var(--color-accent)",
-                  fontFamily: "var(--font-body)",
-                }}
-              >
-                {p}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Recommendations */}
-        <div
-          className="rounded-3xl p-8 mb-10"
-          style={{ background: "var(--color-text)" }}
-        >
-          <h2 className="font-display text-lg font-semibold mb-6" style={{ color: "var(--color-bg)" }}>
-            Рекомендации
-          </h2>
-          <ul className="flex flex-col gap-4">
-            {info.recommendations.map((r, i) => (
-              <li key={i} className="flex items-start gap-4">
-                <span
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5"
-                  style={{ background: "rgba(252,251,249,0.15)", color: "var(--color-bg)" }}
-                >
-                  {i + 1}
-                </span>
-                <span className="text-sm leading-relaxed" style={{ color: "rgba(252,251,249,0.75)", fontFamily: "var(--font-body)" }}>
-                  {r}
-                </span>
-              </li>
-            ))}
-          </ul>
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={() => setPage("professions")}
-            className="flex-1 px-6 py-4 rounded-2xl font-medium text-sm transition-all hover:scale-[1.02]"
-            style={{
-              background: "var(--color-card)",
-              color: "var(--color-text)",
-              border: "1px solid var(--color-line)",
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            <Icon name="Briefcase" size={16} className="inline mr-2" />
-            Все профессии
-          </button>
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => setPage("test")}
-            className="flex-1 px-6 py-4 rounded-2xl font-medium text-sm transition-all hover:scale-[1.02]"
+            className="flex-1 py-4 rounded-2xl font-medium text-sm transition-all hover:scale-[1.01]"
             style={{
               background: "var(--color-card)",
               color: "var(--color-text)",
               border: "1px solid var(--color-line)",
-              fontFamily: "var(--font-body)",
+              fontFamily: "var(--font-display)",
             }}
           >
-            <Icon name="RefreshCw" size={16} className="inline mr-2" />
-            Пройти снова
+            Пройти тест заново
           </button>
         </div>
       </div>
