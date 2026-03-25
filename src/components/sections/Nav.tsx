@@ -21,7 +21,7 @@ export default function Nav({ page, setPage }: NavProps) {
           className="font-display text-lg font-semibold tracking-tight"
           style={{ color: "var(--color-text)" }}
         >
-          Ориентир
+          Профориентация Школа №16
         </button>
         <nav className="flex items-center gap-1">
           {links.map((l) => (
